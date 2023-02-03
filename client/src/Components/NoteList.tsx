@@ -1,9 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Row, Col, Stack, Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import ReactSelect from 'react-select'
+import { Tag } from '../App';
 
 
-const NoteList = () => {
+type NoteListProps = {
+  availableTags: Tag[]
+}
+
+const NoteList = ({ availableTags }: NoteListProps) => {
+
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([])
+
   return (
     <>
       <Row>
@@ -24,6 +33,24 @@ const NoteList = () => {
               <Form.Label>Title</Form.Label>
               <Form.Control />
             </Form.Group>
+            <Col>
+              <Form.Group controlId="tags">
+                <Form.Label>Tags</Form.Label>
+                <ReactSelect
+                  value={selectedTags.map(tag => {
+                    return { label: tag.label, value: tag.id }
+                  })}
+                  options={availableTags.map(tag => {
+                    return { label: tag.label, value: tag.id }
+                  })}
+                  onChange={tags => {
+                    setSelectedTags(tags.map(tag => {
+                      return { label: tag.label, id: tag.value }
+                    }))
+                  }}
+                  isMulti />
+              </Form.Group>
+            </Col>
           </Col>
         </Row>
       </Form>
